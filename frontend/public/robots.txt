@@ -1,0 +1,14 @@
+# robots.txt for KoPartner
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://kopartner.in/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /api/
+
+# Crawl-delay
+Crawl-delay: 1
