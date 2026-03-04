@@ -21,12 +21,12 @@ const TermsPage = () => {
             <h2 className="text-2xl font-bold mb-4">2. Service Description</h2>
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
               <p className="text-blue-800 font-semibold">
-                KoPartner is a <strong>digital platform</strong> that provides technology services to connect individuals seeking emotional support and companionship with verified KoPartners. We do not directly provide companionship services - we only provide the digital infrastructure and platform for service providers and clients to connect.
+                KoPartner is a <strong>digital platform</strong> that provides technology services to connect individuals seeking social and lifestyle support with verified KoPartners. We do not directly provide support services - we only provide the digital infrastructure and platform for service providers and clients to connect.
               </p>
             </div>
             <p className="text-gray-700 mb-4">All interactions facilitated through our platform must be:</p>
             <ul className="list-disc list-inside space-y-2 text-gray-700">
-              <li>Strictly platonic</li>
+              <li>Strictly professional</li>
               <li>Consent-based</li>
               <li>Professional and respectful</li>
               <li>In compliance with applicable laws</li>
@@ -70,7 +70,7 @@ const TermsPage = () => {
                 By becoming a KoPartner and purchasing a membership plan, you acknowledge and agree to the following:
               </p>
               <ul className="list-disc list-inside space-y-2 text-amber-800">
-                <li><strong>Digital Platform Only:</strong> KoPartner is a digital technology platform that facilitates connections between service providers and clients. We do not employ KoPartners, nor do we directly provide any companionship services.</li>
+                <li><strong>Digital Platform Only:</strong> KoPartner is a digital technology platform that facilitates connections between service providers and clients. We do not employ KoPartners, nor do we directly provide any support services.</li>
                 <li><strong>No Guarantee of Bookings:</strong> KoPartner does not guarantee any minimum number of bookings, service requests, or client inquiries.</li>
                 <li><strong>No Commitment on Duration:</strong> There is no commitment or guarantee on when you will receive your first booking or any subsequent bookings.</li>
                 <li><strong>No Income Promise:</strong> KoPartner does not promise or guarantee any specific income, earnings, or financial returns from your membership.</li>

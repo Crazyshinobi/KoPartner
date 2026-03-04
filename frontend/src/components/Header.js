@@ -5,7 +5,7 @@ import { Menu, X, ArrowLeft, LogOut } from 'lucide-react';
 import Logo from './Logo';
 import LoginModal from './LoginModal';
 
-const Header = () => {
+const Header = ({ hideLoginButton = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
@@ -116,7 +116,7 @@ const Header = () => {
                     <span>Logout</span>
                   </button>
                 </div>
-              ) : (
+              ) : !hideLoginButton ? (
                 <button
                   onClick={() => {
                     setAuthRole('client');
@@ -127,7 +127,7 @@ const Header = () => {
                 >
                   Login
                 </button>
-              )}
+              ) : null}
             </div>
 
             {/* Mobile Menu Button */}
@@ -194,7 +194,7 @@ const Header = () => {
                     Logout
                   </button>
                 </>
-              ) : (
+              ) : !hideLoginButton ? (
                 <button
                   onClick={() => {
                     setAuthRole('client');
@@ -205,7 +205,7 @@ const Header = () => {
                 >
                   Login
                 </button>
-              )}
+              ) : null}
             </div>
           )}
         </div>

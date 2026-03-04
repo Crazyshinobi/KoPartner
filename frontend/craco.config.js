@@ -86,8 +86,7 @@ webpackConfig.devServer = (devServerConfig) => {
   devServerConfig.allowedHosts = 'all';
   
   // Add proxy for API requests to backend
-  // const backendTarget = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
-  const backendTarget = 'http://127.0.0.1:8000';
+  const backendTarget = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
   devServerConfig.proxy = [
     {
       context: ['/api'],

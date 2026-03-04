@@ -372,7 +372,7 @@ const LoginModal = ({ isOpen, onClose, initialRole = 'client' }) => {
             <X size={24} />
           </button>
           <h2 className="text-2xl font-bold text-white">Welcome to KoPartner</h2>
-          <p className="text-purple-100 mt-1">Your companion for emotional wellness</p>
+          <p className="text-purple-100 mt-1">Your social & lifestyle support platform</p>
         </div>
         
         <div className="p-6">

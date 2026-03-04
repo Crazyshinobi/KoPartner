@@ -14,7 +14,7 @@ const cityData = {
     name: 'Delhi',
     fullName: 'Delhi NCR',
     state: 'Delhi',
-    description: 'Find trusted KoPartners in Delhi NCR for professional companionship services. Connect with verified companions in Delhi, Noida, Gurgaon for emotional wellness support.',
+    description: 'Find trusted KoPartners in Delhi NCR for professional social support services. Connect with verified KoPartners in Delhi, Noida, Gurgaon.',
     population: '32 million',
     landmarks: ['India Gate', 'Red Fort', 'Qutub Minar'],
     areas: ['Connaught Place', 'South Delhi', 'Noida', 'Gurgaon', 'Dwarka', 'Rohini']
@@ -23,7 +23,7 @@ const cityData = {
     name: 'Noida',
     fullName: 'Noida',
     state: 'Uttar Pradesh',
-    description: 'Professional KoPartner services in Noida. Find verified companions for emotional wellness, stress relief, and companionship in Noida and Greater Noida.',
+    description: 'Professional KoPartner services in Noida. Find verified KoPartners for social support services in Noida and Greater Noida.',
     population: '6 million',
     landmarks: ['Worlds of Wonder', 'Noida Film City', 'Botanical Garden'],
     areas: ['Sector 18', 'Sector 62', 'Greater Noida', 'Sector 137', 'Sector 50']
@@ -32,7 +32,7 @@ const cityData = {
     name: 'Gurgaon',
     fullName: 'Gurugram',
     state: 'Haryana',
-    description: 'KoPartner companionship services in Gurgaon/Gurugram. Professional, verified companions for emotional support and wellness in the millennium city.',
+    description: 'KoPartner social support services in Gurgaon/Gurugram. Professional, verified KoPartners in the millennium city.',
     population: '4 million',
     landmarks: ['Cyber Hub', 'Kingdom of Dreams', 'Ambience Mall'],
     areas: ['Cyber City', 'DLF Phase', 'Sohna Road', 'Golf Course Road', 'MG Road']
@@ -41,7 +41,7 @@ const cityData = {
     name: 'Mumbai',
     fullName: 'Mumbai',
     state: 'Maharashtra',
-    description: 'Mumbai\'s trusted KoPartner platform for professional companionship. Find verified companions in Mumbai for emotional wellness and support.',
+    description: 'Mumbai\'s trusted KoPartner platform for professional social support. Find verified KoPartners in Mumbai.',
     population: '21 million',
     landmarks: ['Gateway of India', 'Marine Drive', 'Bandra-Worli Sea Link'],
     areas: ['Bandra', 'Andheri', 'Juhu', 'Colaba', 'Powai', 'Lower Parel']
@@ -50,7 +50,7 @@ const cityData = {
     name: 'Bangalore',
     fullName: 'Bengaluru',
     state: 'Karnataka',
-    description: 'Professional KoPartner services in Bangalore. Connect with verified companions for emotional wellness in India\'s Silicon Valley.',
+    description: 'Professional KoPartner services in Bangalore. Connect with verified KoPartners in India\'s Silicon Valley.',
     population: '13 million',
     landmarks: ['Lalbagh', 'Cubbon Park', 'Bangalore Palace'],
     areas: ['Koramangala', 'Indiranagar', 'Whitefield', 'HSR Layout', 'Electronic City', 'MG Road']
@@ -59,7 +59,7 @@ const cityData = {
     name: 'Pune',
     fullName: 'Pune',
     state: 'Maharashtra',
-    description: 'Find KoPartners in Pune for professional companionship and emotional wellness services. Verified companions in the cultural capital of Maharashtra.',
+    description: 'Find KoPartners in Pune for professional social support services. Verified KoPartners in the cultural capital of Maharashtra.',
     population: '7 million',
     landmarks: ['Shaniwar Wada', 'Aga Khan Palace', 'Sinhagad Fort'],
     areas: ['Koregaon Park', 'Viman Nagar', 'Hinjewadi', 'Kothrud', 'Baner', 'Aundh']
@@ -68,7 +68,7 @@ const cityData = {
     name: 'Hyderabad',
     fullName: 'Hyderabad',
     state: 'Telangana',
-    description: 'KoPartner services in Hyderabad. Professional companionship and emotional wellness support from verified companions in the City of Pearls.',
+    description: 'KoPartner services in Hyderabad. Professional social support from verified KoPartners in the City of Pearls.',
     population: '10 million',
     landmarks: ['Charminar', 'Golconda Fort', 'Hussain Sagar'],
     areas: ['Banjara Hills', 'Jubilee Hills', 'HITEC City', 'Gachibowli', 'Madhapur', 'Secunderabad']
@@ -77,7 +77,7 @@ const cityData = {
     name: 'Chennai',
     fullName: 'Chennai',
     state: 'Tamil Nadu',
-    description: 'Professional KoPartner companionship in Chennai. Find verified companions for emotional wellness in the gateway to South India.',
+    description: 'Professional KoPartner services in Chennai. Find verified KoPartners in the gateway to South India.',
     population: '11 million',
     landmarks: ['Marina Beach', 'Kapaleeshwarar Temple', 'Fort St. George'],
     areas: ['T. Nagar', 'Anna Nagar', 'Adyar', 'Velachery', 'OMR', 'ECR']
@@ -86,7 +86,7 @@ const cityData = {
     name: 'Kolkata',
     fullName: 'Kolkata',
     state: 'West Bengal',
-    description: 'KoPartner services in Kolkata. Professional companionship and emotional support from verified companions in the City of Joy.',
+    description: 'KoPartner services in Kolkata. Professional social support from verified KoPartners in the City of Joy.',
     population: '15 million',
     landmarks: ['Victoria Memorial', 'Howrah Bridge', 'Park Street'],
     areas: ['Salt Lake', 'New Town', 'Park Street', 'Ballygunge', 'Alipore', 'Rajarhat']
@@ -95,7 +95,7 @@ const cityData = {
     name: 'Ahmedabad',
     fullName: 'Ahmedabad',
     state: 'Gujarat',
-    description: 'Find KoPartners in Ahmedabad for professional companionship services. Verified companions for emotional wellness in Gujarat\'s largest city.',
+    description: 'Find KoPartners in Ahmedabad for professional social support services. Verified KoPartners in Gujarat\'s largest city.',
     population: '8 million',
     landmarks: ['Sabarmati Ashram', 'Adalaj Stepwell', 'Kankaria Lake'],
     areas: ['SG Highway', 'Prahlad Nagar', 'Navrangpura', 'Satellite', 'Bodakdev', 'Vastrapur']
@@ -104,7 +104,7 @@ const cityData = {
     name: 'Jaipur',
     fullName: 'Jaipur',
     state: 'Rajasthan',
-    description: 'Professional KoPartner services in Jaipur. Find verified companions for emotional wellness in the Pink City of India.',
+    description: 'Professional KoPartner services in Jaipur. Find verified KoPartners in the Pink City of India.',
     population: '4 million',
     landmarks: ['Hawa Mahal', 'Amber Fort', 'City Palace'],
     areas: ['C-Scheme', 'Vaishali Nagar', 'Malviya Nagar', 'Mansarovar', 'Raja Park', 'Tonk Road']
@@ -113,7 +113,7 @@ const cityData = {
     name: 'Chandigarh',
     fullName: 'Chandigarh',
     state: 'Chandigarh',
-    description: 'KoPartner companionship in Chandigarh. Professional, verified companions for emotional support in India\'s best planned city.',
+    description: 'KoPartner social support services in Chandigarh. Professional, verified KoPartners in India\'s best planned city.',
     population: '1.2 million',
     landmarks: ['Rock Garden', 'Sukhna Lake', 'Capitol Complex'],
     areas: ['Sector 17', 'Sector 35', 'Sector 22', 'Mohali', 'Panchkula', 'Zirakpur']
@@ -122,7 +122,7 @@ const cityData = {
     name: 'Indore',
     fullName: 'Indore',
     state: 'Madhya Pradesh',
-    description: 'Find KoPartners in Indore for professional companionship. Verified companions for emotional wellness in India\'s cleanest city.',
+    description: 'Find KoPartners in Indore for professional social support. Verified KoPartners in India\'s cleanest city.',
     population: '3.5 million',
     landmarks: ['Rajwada Palace', 'Lal Bagh Palace', 'Sarafa Bazaar'],
     areas: ['Vijay Nagar', 'Palasia', 'South Tukoganj', 'AB Road', 'Bhawarkuan', 'Sapna Sangeeta']
@@ -131,7 +131,7 @@ const cityData = {
     name: 'Lucknow',
     fullName: 'Lucknow',
     state: 'Uttar Pradesh',
-    description: 'Professional KoPartner services in Lucknow. Find verified companions for emotional wellness in the City of Nawabs.',
+    description: 'Professional KoPartner services in Lucknow. Find verified KoPartners in the City of Nawabs.',
     population: '4 million',
     landmarks: ['Bara Imambara', 'Rumi Darwaza', 'Hazratganj'],
     areas: ['Gomti Nagar', 'Hazratganj', 'Aliganj', 'Indira Nagar', 'Alambagh', 'Mahanagar']
@@ -140,7 +140,7 @@ const cityData = {
     name: 'Kochi',
     fullName: 'Kochi',
     state: 'Kerala',
-    description: 'KoPartner companionship services in Kochi. Professional companions for emotional wellness in the Queen of the Arabian Sea.',
+    description: 'KoPartner social support services in Kochi. Professional KoPartners in the Queen of the Arabian Sea.',
     population: '2.5 million',
     landmarks: ['Fort Kochi', 'Chinese Fishing Nets', 'Mattancherry Palace'],
     areas: ['MG Road', 'Marine Drive', 'Kakkanad', 'Edappally', 'Vytilla', 'Palarivattom']
@@ -149,7 +149,7 @@ const cityData = {
     name: 'Coimbatore',
     fullName: 'Coimbatore',
     state: 'Tamil Nadu',
-    description: 'Find KoPartners in Coimbatore for professional companionship. Verified companions for emotional support in the Manchester of South India.',
+    description: 'Find KoPartners in Coimbatore for professional social support. Verified KoPartners in the Manchester of South India.',
     population: '2.5 million',
     landmarks: ['Marudhamalai Temple', 'Isha Yoga Center', 'Siruvani Waterfalls'],
     areas: ['RS Puram', 'Gandhipuram', 'Peelamedu', 'Saibaba Colony', 'Race Course', 'Brookefields']
@@ -158,7 +158,7 @@ const cityData = {
     name: 'Nashik',
     fullName: 'Nashik',
     state: 'Maharashtra',
-    description: 'Professional KoPartner services in Nashik. Find verified companions for emotional wellness in the Wine Capital of India.',
+    description: 'Professional KoPartner services in Nashik. Find verified KoPartners in the Wine Capital of India.',
     population: '2 million',
     landmarks: ['Sula Vineyards', 'Trimbakeshwar', 'Pandavleni Caves'],
     areas: ['College Road', 'Gangapur Road', 'Panchavati', 'CIDCO', 'Nashik Road', 'Satpur']
@@ -167,7 +167,7 @@ const cityData = {
     name: 'Surat',
     fullName: 'Surat',
     state: 'Gujarat',
-    description: 'KoPartner companionship in Surat. Professional, verified companions for emotional support in the Diamond City of India.',
+    description: 'KoPartner social support services in Surat. Professional, verified KoPartners in the Diamond City of India.',
     population: '7 million',
     landmarks: ['Dumas Beach', 'Surat Castle', 'ISKCON Temple'],
     areas: ['Athwa', 'Adajan', 'Vesu', 'City Light', 'Piplod', 'Varachha']
@@ -176,7 +176,7 @@ const cityData = {
     name: 'Dehradun',
     fullName: 'Dehradun',
     state: 'Uttarakhand',
-    description: 'Find KoPartners in Dehradun for professional companionship. Verified companions for emotional wellness in the gateway to Himalayas.',
+    description: 'Find KoPartners in Dehradun for professional social support. Verified KoPartners in the gateway to Himalayas.',
     population: '0.8 million',
     landmarks: ['Robber\'s Cave', 'Sahastradhara', 'Forest Research Institute'],
     areas: ['Rajpur Road', 'Race Course', 'Clement Town', 'Prem Nagar', 'Balliwala', 'Dalanwala']
@@ -276,58 +276,58 @@ const CityPage = () => {
   // All 8 services matching homepage
   const services = [
     {
-      emoji: '💬',
-      title: 'Voice Call Chat',
-      description: 'Personal Gossip or Stress Relief',
-      price: '₹500/hour',
+      emoji: '👴',
+      title: 'Elder Care',
+      description: 'Senior assistance & daily support',
+      price: '₹1000/hour',
       gradient: 'from-purple-400 to-purple-600'
     },
     {
-      emoji: '🎥',
-      title: 'Video Call Chat',
-      description: 'Personal Gossip or Stress Relief',
-      price: '₹1000/hour',
+      emoji: '🤝',
+      title: 'Hangingout',
+      description: 'Casual social time together',
+      price: '₹1500/hour',
       gradient: 'from-pink-400 to-pink-600'
     },
     {
-      emoji: '🎬',
-      title: 'Movie Companion',
-      description: 'Watch together, share laughs',
+      emoji: '🎉',
+      title: 'Clubbing',
+      description: 'Nightlife & party assistance',
       price: '₹2000/hour',
       gradient: 'from-indigo-400 to-indigo-600'
     },
     {
-      emoji: '🛍️',
-      title: 'Shopping Buddy',
-      description: 'Groceries, errands, or window shopping',
+      emoji: '🎬',
+      title: 'Movie Partner',
+      description: 'Watch together, share laughs',
       price: '₹2000/hour',
       gradient: 'from-violet-400 to-violet-600'
     },
     {
-      emoji: '🩺',
-      title: 'Medical Support',
-      description: 'Appointment companionship',
+      emoji: '🛍️',
+      title: 'Shopping Buddy',
+      description: 'Groceries, errands, or shopping',
       price: '₹2000/hour',
       gradient: 'from-fuchsia-400 to-fuchsia-600'
+    },
+    {
+      emoji: '🩺',
+      title: 'Medical Support',
+      description: 'Hospital & appointment assistance',
+      price: '₹2000/hour',
+      gradient: 'from-purple-500 to-pink-500'
     },
     {
       emoji: '🏠',
       title: 'Domestic Help',
       description: 'Light support & organizing',
       price: '₹2000/hour',
-      gradient: 'from-purple-500 to-pink-500'
+      gradient: 'from-cyan-400 to-blue-600'
     },
     {
       emoji: '✈️',
       title: 'Travel Partner',
       description: 'Explore and travel together',
-      price: '₹2000/hour',
-      gradient: 'from-cyan-400 to-blue-600'
-    },
-    {
-      emoji: '😊',
-      title: 'Stress Relief',
-      description: 'Soothe anxiety with presence',
       price: '₹2000/hour',
       gradient: 'from-rose-400 to-rose-600'
     }
@@ -441,7 +441,7 @@ const CityPage = () => {
                   <div className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
                   <div>
                     <p className="font-semibold text-gray-800">Choose Services</p>
-                    <p className="text-sm text-gray-600">Select voice call, video call, or in-person</p>
+                    <p className="text-sm text-gray-600">Select elder care, hangingout, clubbing, etc.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -529,7 +529,7 @@ const CityPage = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-3 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             KoPartner Services in {city.name}
           </h2>
-          <p className="text-center text-gray-600 mb-8">Choose from our wide range of companionship services</p>
+          <p className="text-center text-gray-600 mb-8">Choose from our wide range of social support services</p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {services.map((service, index) => (
@@ -600,17 +600,17 @@ const CityPage = () => {
           </h2>
           <div className="prose prose-lg text-gray-600">
             <p>
-              <strong>KoPartner in {city.name}</strong> provides professional companionship services for emotional wellness and support. 
-              Our verified KoPartners in {city.fullName}, {city.state} offer safe, consent-first, strictly platonic services including 
-              voice calls, video calls, movie companions, shopping buddies, travel partners, and stress relief support.
+              <strong>KoPartner in {city.name}</strong> provides professional social support services. 
+              Our verified KoPartners in {city.fullName}, {city.state} offer safe, consent-first, professional services including 
+              elder care, hangingout, clubbing, movie partners, shopping buddies, travel partners, and more.
             </p>
             <p className="mt-4">
               Whether you're looking to <strong>find a KoPartner in {city.name}</strong> or want to <strong>become a KoPartner in {city.name}</strong>, 
               our platform ensures quality, safety, and professionalism. All KoPartners are background-verified and trained to provide 
-              emotional support while maintaining strict boundaries.
+              professional support while maintaining strict boundaries.
             </p>
             <p className="mt-4">
-              <strong>KoPartner {city.name}</strong> is part of India's Number 1 Best Trusted Emotional Wellness Platform, 
+              <strong>KoPartner {city.name}</strong> is part of India's #1 Social & Lifestyle Support Services Platform, 
               serving clients across {city.areas.slice(0, 3).join(', ')} and other areas in {city.fullName}.
             </p>
           </div>

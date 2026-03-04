@@ -135,6 +135,39 @@ const Dashboard = () => {
     }
   };
 
+  // Accept booking request
+  const handleAcceptBooking = async (bookingId) => {
+    try {
+      const response = await axios.post(`${API}/kopartner/accept-booking/${bookingId}`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        alert('✅ Booking accepted! Client has been notified.');
+        fetchKoPartnerBookings(); // Refresh bookings
+      }
+    } catch (error) {
+      console.error('Failed to accept booking:', error);
+      alert(error.response?.data?.detail || 'Failed to accept booking. Please try again.');
+    }
+  };
+
+  // Reject booking request with reason
+  const handleRejectBooking = async (bookingId, reason) => {
+    try {
+      const response = await axios.post(`${API}/kopartner/reject-booking/${bookingId}`, 
+        { reason: reason || 'Not available at this time' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        alert('Booking rejected. Client can now select another KoPartner.');
+        fetchKoPartnerBookings(); // Refresh bookings
+      }
+    } catch (error) {
+      console.error('Failed to reject booking:', error);
+      alert(error.response?.data?.detail || 'Failed to reject booking. Please try again.');
+    }
+  };
+
   const handleUpgradeToBoth = async () => {
     setUpgrading(true);
     try {
@@ -706,7 +739,12 @@ const Dashboard = () => {
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                            booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            booking.status === 'accepted' ? 'bg-green-100 text-green-700' :
+                            booking.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                            'bg-gray-100 text-gray-700'
+                          }`}>
                             {booking.status}
                           </span>
                           <span className="text-gray-500 text-sm">
@@ -733,7 +771,51 @@ const Dashboard = () => {
                               Services: {booking.selected_services.map(s => s.name || s.service).join(', ')}
                             </p>
                           )}
+                          {booking.preferred_date && (
+                            <p className="text-sm text-gray-500">
+                              Preferred: {booking.preferred_date} {booking.preferred_time || ''}
+                            </p>
+                          )}
+                          {booking.notes && (
+                            <p className="text-sm text-gray-500 italic">
+                              Note: {booking.notes}
+                            </p>
+                          )}
                         </div>
+                        
+                        {/* Accept/Reject buttons for pending bookings */}
+                        {booking.status === 'pending' && (
+                          <div className="flex gap-3 mt-4">
+                            <button
+                              onClick={() => handleAcceptBooking(booking.id)}
+                              className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition flex items-center gap-2"
+                            >
+                              <CheckCircle size={18} />
+                              Accept
+                            </button>
+                            <button
+                              onClick={() => {
+                                const reason = prompt('Please provide a reason for rejection:', 'Not available at this time');
+                                if (reason !== null) {
+                                  handleRejectBooking(booking.id, reason);
+                                }
+                              }}
+                              className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center gap-2"
+                            >
+                              <X size={18} />
+                              Reject
+                            </button>
+                          </div>
+                        )}
+                        
+                        {/* Show rejection reason if rejected */}
+                        {booking.status === 'rejected' && booking.rejection_reason && (
+                          <div className="mt-3 p-3 bg-red-50 rounded-lg">
+                            <p className="text-sm text-red-700">
+                              <strong>Rejection Reason:</strong> {booking.rejection_reason}
+                            </p>
+                          </div>
+                        )}
                       </div>
                       <div className="text-right">
                         {booking.kopartner_earning && (

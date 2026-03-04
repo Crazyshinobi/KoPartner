@@ -5,7 +5,7 @@ import axios from 'axios';
 import { 
   Home, LogOut, Users, DollarSign, AlertTriangle, CheckCircle, XCircle, 
   TrendingUp, Download, Search, Eye, UserCheck, UserX, Trash2, 
-  ChevronDown, RefreshCw, FileSpreadsheet, Edit, Send, Bell, Mail
+  ChevronDown, RefreshCw, FileSpreadsheet, Edit, Send, Bell, Mail, Lock
 } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -44,6 +44,11 @@ const AdminPanel = () => {
   const [emailQuota, setEmailQuota] = useState(null);
   const [bulkEmailResult, setBulkEmailResult] = useState(null);
   
+  // Password change state
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [passwordChanging, setPasswordChanging] = useState(false);
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -55,10 +60,15 @@ const AdminPanel = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [bulkActivating, setBulkActivating] = useState(false);
   const [sendingSelectedEmails, setSendingSelectedEmails] = useState(false);
-  const [activationMembershipType, setActivationMembershipType] = useState('1year');
+  const [activationMembershipType, setActivationMembershipType] = useState('6month'); // Default 6 months
   const [emailRotationStatus, setEmailRotationStatus] = useState(null);
   const [autoEmailRunning, setAutoEmailRunning] = useState(false);
   const [processingPayout, setProcessingPayout] = useState(null);
+  
+  // Auto-Activation states
+  const [autoActivationStatus, setAutoActivationStatus] = useState(null);
+  const [runningAutoActivation, setRunningAutoActivation] = useState(false);
+  const [paidButInactiveList, setPaidButInactiveList] = useState([]);
   
   // SUPER FAST SEARCH states
   const [instantSearchResults, setInstantSearchResults] = useState([]);
@@ -74,6 +84,7 @@ const AdminPanel = () => {
     fetchAllData();
     fetchEmailQuota();
     fetchEmailRotationStatus();
+    fetchAutoActivationStatus();
   }, [user]);
 
   // Fetch data when tab, page, or filters change
@@ -231,11 +242,82 @@ const AdminPanel = () => {
     }
   };
 
+  // Auto-Activation Functions
+  const fetchAutoActivationStatus = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/auto-activation/status`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAutoActivationStatus(response.data);
+    } catch (error) {
+      console.error('Failed to fetch auto-activation status:', error);
+    }
+  };
+
+  const runAutoActivationNow = async () => {
+    if (!window.confirm('Run auto-activation check now? This will find and activate all paid but inactive profiles.')) return;
+    
+    setRunningAutoActivation(true);
+    try {
+      const response = await axios.post(`${API}/admin/auto-activation/run-now`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert(response.data.message);
+      // Refresh status after a delay
+      setTimeout(() => {
+        fetchAutoActivationStatus();
+        fetchPaidButInactive();
+        fetchStats();
+        fetchAllData();
+      }, 3000);
+    } catch (error) {
+      alert('Failed to run auto-activation: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setRunningAutoActivation(false);
+    }
+  };
+
+  const fetchPaidButInactive = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/paid-but-inactive`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setPaidButInactiveList(response.data.members || []);
+    } catch (error) {
+      console.error('Failed to fetch paid but inactive:', error);
+    }
+  };
+
+  const activateAllPaidMembers = async () => {
+    if (!window.confirm('⚠️ This will activate ALL paid members who are currently inactive. Continue?')) return;
+    
+    setRunningAutoActivation(true);
+    try {
+      const response = await axios.post(`${API}/admin/activate-all-paid`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert(`✅ ${response.data.message}`);
+      fetchAutoActivationStatus();
+      fetchPaidButInactive();
+      fetchStats();
+      fetchAllData();
+    } catch (error) {
+      alert('Failed to activate: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setRunningAutoActivation(false);
+    }
+  };
+
   // Fetch scheduler status periodically
   useEffect(() => {
     if (user && user.role === 'admin' && activeTab === 'unpaid') {
       fetchSchedulerStatus();
-      const interval = setInterval(fetchSchedulerStatus, 30000); // Refresh every 30 seconds
+      fetchAutoActivationStatus();
+      fetchPaidButInactive();
+      const interval = setInterval(() => {
+        fetchSchedulerStatus();
+        fetchAutoActivationStatus();
+      }, 30000); // Refresh every 30 seconds
       return () => clearInterval(interval);
     }
   }, [user, activeTab]);
@@ -363,6 +445,38 @@ const AdminPanel = () => {
     } catch (error) {
       console.error('Failed to fetch online partners:', error.response?.data || error.message);
       setOnlinePartners([]);
+    }
+  };
+
+  // Admin password change function
+  const handlePasswordChange = async () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      alert('New passwords do not match!');
+      return;
+    }
+    if (passwordData.newPassword.length < 6) {
+      alert('New password must be at least 6 characters');
+      return;
+    }
+    
+    setPasswordChanging(true);
+    try {
+      const response = await axios.post(`${API}/admin/change-password`, {
+        current_password: passwordData.currentPassword,
+        new_password: passwordData.newPassword
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data.success) {
+        alert('✅ Password changed successfully! Please use your new password for next login.');
+        setShowPasswordModal(false);
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      }
+    } catch (error) {
+      alert(error.response?.data?.detail || 'Failed to change password');
+    } finally {
+      setPasswordChanging(false);
     }
   };
 
@@ -991,15 +1105,25 @@ const AdminPanel = () => {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             Admin Dashboard
           </h1>
-          <button
-            onClick={fetchAllData}
-            disabled={loading}
-            className="flex items-center space-x-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition"
-            data-testid="refresh-btn"
-          >
-            <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
-            <span>Refresh Data</span>
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowPasswordModal(true)}
+              className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+              data-testid="change-password-btn"
+            >
+              <Lock size={20} />
+              <span>Change Password</span>
+            </button>
+            <button
+              onClick={fetchAllData}
+              disabled={loading}
+              className="flex items-center space-x-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition"
+              data-testid="refresh-btn"
+            >
+              <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
+              <span>Refresh Data</span>
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -1164,6 +1288,38 @@ const AdminPanel = () => {
                   <FileSpreadsheet size={20} />
                   <span>Export SOS Reports (CSV)</span>
                 </button>
+              </div>
+              
+              {/* Full Database Export Section */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h4 className="text-lg font-semibold mb-3 text-gray-800">Full Database Backup</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    onClick={() => {
+                      const token = localStorage.getItem('admin_token');
+                      window.open(`/api/admin/export-all-data?token=${token}`, '_blank');
+                    }}
+                    className="flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-lg hover:from-purple-700 hover:to-pink-700 transition shadow-lg"
+                    data-testid="export-full-json-btn"
+                  >
+                    <Download size={20} />
+                    <span>Full Backup (JSON)</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      const token = localStorage.getItem('admin_token');
+                      window.open(`/api/admin/export-users-csv?token=${token}`, '_blank');
+                    }}
+                    className="flex items-center justify-center space-x-2 bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 px-4 rounded-lg hover:from-green-700 hover:to-teal-700 transition shadow-lg"
+                    data-testid="export-users-csv-btn"
+                  >
+                    <FileSpreadsheet size={20} />
+                    <span>All Users (CSV)</span>
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Full Backup includes: Users, Transactions, Bookings, Payments, SOS Reports, Reviews, Audit Logs
+                </p>
               </div>
             </div>
           </div>
@@ -1444,8 +1600,8 @@ const AdminPanel = () => {
                           <p className="font-semibold">{kp.pincode || 'N/A'}</p>
                         </div>
                         <div>
-                          <span className="text-gray-500">UPI ID:</span>
-                          <p className="font-semibold">{kp.upi_id || 'N/A'}</p>
+                          <span className="text-gray-500">Registered:</span>
+                          <p className="font-semibold">{kp.created_at ? new Date(kp.created_at).toLocaleDateString() : 'N/A'}</p>
                         </div>
                         <div>
                           <span className="text-gray-500">Rating:</span>
@@ -1718,29 +1874,105 @@ const AdminPanel = () => {
                 </div>
 
                 {/* Bulk Activate Section */}
-                <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <span className="text-indigo-700 font-medium">Bulk Activate:</span>
-                  <select
-                    value={activationMembershipType}
-                    onChange={(e) => setActivationMembershipType(e.target.value)}
-                    className="border border-indigo-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"
-                  >
-                    <option value="6month">6 Months (₹590)</option>
-                    <option value="1year">1 Year (₹1180) - Popular</option>
-                    <option value="lifetime">Lifetime (₹2360)</option>
-                  </select>
-                  <button
-                    onClick={handleBulkActivate}
-                    disabled={bulkActivating || selectedUsers.size === 0}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition ${
-                      bulkActivating || selectedUsers.size === 0
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-green-600 text-white hover:bg-green-700'
-                    }`}
-                  >
-                    <CheckCircle size={18} />
-                    {bulkActivating ? 'Activating...' : `Activate Selected (${selectedUsers.size})`}
-                  </button>
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 mb-4">
+                  <div className="flex flex-wrap items-center gap-3 mb-3">
+                    <span className="text-green-700 font-bold text-lg">🚀 Quick Bulk Activate (50 Users):</span>
+                  </div>
+                  
+                  {/* Quick Action: Select All 50 & Activate for 6 Months */}
+                  <div className="flex flex-wrap items-center gap-3 mb-4 p-3 bg-white rounded-lg border border-green-300">
+                    <button
+                      onClick={() => {
+                        // Select all unpaid users on current page (max 50)
+                        const pageUsers = unpaidKoPartners.slice(0, 50);
+                        const newSelected = new Set(pageUsers.map(u => u.id));
+                        setSelectedUsers(newSelected);
+                        setSelectAll(true);
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+                    >
+                      <CheckCircle size={18} />
+                      Select All 50 on Page
+                    </button>
+                    
+                    <button
+                      onClick={async () => {
+                        // Quick activate: Select all 50 and activate for 6 months
+                        const pageUsers = unpaidKoPartners.slice(0, 50);
+                        if (pageUsers.length === 0) {
+                          alert('❌ No unpaid users to activate');
+                          return;
+                        }
+                        
+                        const confirmMsg = `🎯 QUICK ACTIVATE ${pageUsers.length} Users for 6 MONTHS?\n\n` +
+                          `This will:\n` +
+                          `• Select all ${pageUsers.length} unpaid users on this page\n` +
+                          `• Mark them as PAID\n` +
+                          `• Activate their profile\n` +
+                          `• Set 6-month membership\n\n` +
+                          `Continue?`;
+                        
+                        if (!window.confirm(confirmMsg)) return;
+                        
+                        setBulkActivating(true);
+                        try {
+                          const response = await axios.post(`${API}/admin/bulk-activate-profiles`, {
+                            user_ids: pageUsers.map(u => u.id),
+                            membership_type: '6month'
+                          }, {
+                            headers: { Authorization: `Bearer ${token}` }
+                          });
+                          
+                          const { activated, failed } = response.data;
+                          alert(`✅ Quick Activation Complete!\n\nActivated: ${activated}\nFailed: ${failed}\nMembership: 6 Months`);
+                          
+                          setSelectedUsers(new Set());
+                          setSelectAll(false);
+                          fetchAllData();
+                          fetchStats();
+                        } catch (error) {
+                          alert('❌ Activation failed: ' + (error.response?.data?.detail || error.message));
+                        } finally {
+                          setBulkActivating(false);
+                        }
+                      }}
+                      disabled={bulkActivating || unpaidKoPartners.length === 0}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-lg transition ${
+                        bulkActivating || unpaidKoPartners.length === 0
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-lg'
+                      }`}
+                    >
+                      <CheckCircle size={22} />
+                      {bulkActivating ? 'Activating...' : `⚡ Activate All 50 for 6 Months`}
+                    </button>
+                  </div>
+                  
+                  {/* Custom Selection Activate */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="text-green-700 font-medium">Or Custom Selection:</span>
+                    <select
+                      value={activationMembershipType}
+                      onChange={(e) => setActivationMembershipType(e.target.value)}
+                      className="border border-green-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="6month">6 Months (₹590) - Default</option>
+                      <option value="1year">1 Year (₹1180)</option>
+                      <option value="lifetime">Lifetime (₹2360)</option>
+                    </select>
+                    <button
+                      onClick={handleBulkActivate}
+                      disabled={bulkActivating || selectedUsers.size === 0}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition ${
+                        bulkActivating || selectedUsers.size === 0
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-green-600 text-white hover:bg-green-700'
+                      }`}
+                    >
+                      <CheckCircle size={18} />
+                      {bulkActivating ? 'Activating...' : `Activate Selected (${selectedUsers.size})`}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Email Actions */}
@@ -1963,6 +2195,131 @@ const AdminPanel = () => {
                 https://razorpay.me/@setindiabusinessprivateli7604?amount=Qqc7ukxLkwXIpgOQzHjq7A%3D%3D
               </p>
               <p className="text-blue-600 text-xs mt-1">This link will be sent via SMS when you click Send Reminder</p>
+            </div>
+
+            {/* Auto-Activation System - Self-Healing for Paid but Inactive Users */}
+            <div className={`border rounded-xl p-4 mb-4 ${
+              autoActivationStatus?.enabled 
+                ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-300' 
+                : 'bg-gradient-to-r from-gray-50 to-slate-50 border-gray-300'
+            }`}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-full ${autoActivationStatus?.enabled ? 'bg-emerald-500' : 'bg-gray-400'}`}>
+                    <CheckCircle size={20} className={`text-white ${autoActivationStatus?.running ? 'animate-pulse' : ''}`} />
+                  </div>
+                  <div>
+                    <h3 className={`font-bold ${autoActivationStatus?.enabled ? 'text-emerald-800' : 'text-gray-700'}`}>
+                      🔄 Auto-Activation System (Self-Healing)
+                    </h3>
+                    <p className={`text-sm ${autoActivationStatus?.enabled ? 'text-emerald-600' : 'text-gray-500'}`}>
+                      {autoActivationStatus?.enabled 
+                        ? `✅ ACTIVE - Runs ${autoActivationStatus?.interval || 'every 5 minutes'} automatically` 
+                        : '⏸️ INACTIVE'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={runAutoActivationNow}
+                    disabled={runningAutoActivation || autoActivationStatus?.running}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition ${
+                      runningAutoActivation || autoActivationStatus?.running
+                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                    }`}
+                    data-testid="run-auto-activation-btn"
+                  >
+                    <RefreshCw size={16} className={runningAutoActivation || autoActivationStatus?.running ? 'animate-spin' : ''} />
+                    {runningAutoActivation || autoActivationStatus?.running ? 'Running...' : '▶️ Run Now'}
+                  </button>
+                  <button
+                    onClick={activateAllPaidMembers}
+                    disabled={runningAutoActivation || (autoActivationStatus?.paid_but_inactive_count === 0)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition ${
+                      runningAutoActivation || (autoActivationStatus?.paid_but_inactive_count === 0)
+                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-lg'
+                    }`}
+                    data-testid="activate-all-paid-btn"
+                  >
+                    <CheckCircle size={16} />
+                    Activate All Paid ({autoActivationStatus?.paid_but_inactive_count || 0})
+                  </button>
+                </div>
+              </div>
+              
+              {/* Auto-Activation Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-3">
+                <div className="bg-white/70 rounded-lg p-3 text-center">
+                  <p className="text-xl font-bold text-orange-600">{autoActivationStatus?.paid_but_inactive_count || 0}</p>
+                  <p className="text-xs text-gray-600">Paid But Inactive</p>
+                </div>
+                <div className="bg-white/70 rounded-lg p-3 text-center">
+                  <p className="text-xl font-bold text-emerald-600">{autoActivationStatus?.total_activated_today || 0}</p>
+                  <p className="text-xs text-gray-600">Activated Today</p>
+                </div>
+                <div className="bg-white/70 rounded-lg p-3 text-center">
+                  <p className="text-xs font-semibold text-gray-700">Last Run</p>
+                  <p className="text-xs text-gray-500">
+                    {autoActivationStatus?.last_run 
+                      ? new Date(autoActivationStatus.last_run).toLocaleString() 
+                      : 'Not yet'}
+                  </p>
+                </div>
+                <div className="bg-white/70 rounded-lg p-3 text-center">
+                  <p className="text-xs font-semibold text-gray-700">Next Run</p>
+                  <p className="text-xs text-gray-500">
+                    {autoActivationStatus?.next_run 
+                      ? new Date(autoActivationStatus.next_run).toLocaleString() 
+                      : 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-white/70 rounded-lg p-3 text-center">
+                  <p className="text-xs font-semibold text-gray-700">Last Result</p>
+                  <p className={`text-xs ${
+                    autoActivationStatus?.last_result?.activated > 0 ? 'text-green-600' : 'text-gray-500'
+                  }`}>
+                    {autoActivationStatus?.last_result 
+                      ? `${autoActivationStatus.last_result.activated || 0} activated` 
+                      : 'No runs yet'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Failed Activations Warning */}
+              {autoActivationStatus?.failed_activations && autoActivationStatus.failed_activations.length > 0 && (
+                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 text-sm font-semibold">
+                    ⚠️ {autoActivationStatus.failed_activations.length} activation(s) failed recently
+                  </p>
+                </div>
+              )}
+
+              {/* Paid but Inactive List Preview */}
+              {paidButInactiveList.length > 0 && (
+                <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <p className="text-orange-700 text-sm font-semibold mb-2">
+                    📋 Paid But Inactive Members ({paidButInactiveList.length}):
+                  </p>
+                  <div className="max-h-32 overflow-y-auto">
+                    {paidButInactiveList.slice(0, 5).map((member, idx) => (
+                      <div key={idx} className="text-xs text-orange-600 py-1 border-b border-orange-100 last:border-0">
+                        {member.name || 'N/A'} - {member.phone} - {member.cuddlist_status || 'N/A'}
+                      </div>
+                    ))}
+                    {paidButInactiveList.length > 5 && (
+                      <p className="text-xs text-orange-500 mt-1">
+                        ... and {paidButInactiveList.length - 5} more
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <p className="text-emerald-600 text-xs mt-3">
+                💡 This system automatically finds users who have paid for membership but whose profiles are not activated (due to payment callback issues) and activates them.
+              </p>
             </div>
 
             {unpaidKoPartners.length === 0 ? (
@@ -3105,6 +3462,80 @@ const AdminPanel = () => {
                 className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Lock size={24} />
+                Change Admin Password
+              </h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                <input
+                  type="password"
+                  value={passwordData.currentPassword}
+                  onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  placeholder="Enter current password"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <input
+                  type="password"
+                  value={passwordData.newPassword}
+                  onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  placeholder="Enter new password (min 6 characters)"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                <input
+                  type="password"
+                  value={passwordData.confirmPassword}
+                  onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  placeholder="Confirm new password"
+                />
+              </div>
+            </div>
+            <div className="border-t p-4 flex justify-end gap-3 bg-gray-50">
+              <button
+                onClick={() => {
+                  setShowPasswordModal(false);
+                  setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePasswordChange}
+                disabled={passwordChanging || !passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+              >
+                {passwordChanging ? (
+                  <>
+                    <RefreshCw size={16} className="animate-spin" />
+                    Changing...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle size={16} />
+                    Change Password
+                  </>
+                )}
               </button>
             </div>
           </div>

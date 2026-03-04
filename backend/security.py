@@ -19,7 +19,7 @@ import bleach
 import hashlib
 import hmac
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, Optional, List
 from functools import wraps
 
@@ -354,13 +354,7 @@ SECURITY_HEADERS = {
     "X-Frame-Options": "DENY",
     "X-XSS-Protection": "1; mode=block",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-    "Content-Security-Policy": (
-        "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.jsdelivr.net; "
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
-        "img-src 'self' data: https:; "
-        "connect-src 'self' https://api.razorpay.com https://*.razorpay.com;"
-    ),
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.razorpay.com https://*.razorpay.com;",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
 }
@@ -848,18 +842,7 @@ SECURITY_HEADERS_ENHANCED = {
     "X-Frame-Options": "DENY",
     "X-XSS-Protection": "1; mode=block",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-    "Content-Security-Policy": (
-        "default-src 'self'; "
-        # Added https://cdn.jsdelivr.net for Swagger scripts
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://api.razorpay.com https://cdn.jsdelivr.net; "
-        # Added https://cdn.jsdelivr.net for Swagger styles
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
-        "font-src 'self' https://fonts.gstatic.com; "
-        "img-src 'self' data: https: blob:; "
-        # Added https://cdn.jsdelivr.net to connect-src to allow potential swagger fetches
-        "connect-src 'self' https://api.razorpay.com https://*.razorpay.com https://lumberjack.razorpay.com https://cdn.jsdelivr.net; "
-        "frame-src https://api.razorpay.com https://checkout.razorpay.com;"
-    ),
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://api.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.razorpay.com https://*.razorpay.com https://lumberjack.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com;",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "geolocation=(), microphone=(), camera=(), payment=(self)",
     "X-Permitted-Cross-Domain-Policies": "none",

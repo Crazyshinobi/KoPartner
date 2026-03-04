@@ -202,58 +202,58 @@ const HomePage = () => {
   // OPTIMIZED: Memoize services
   const services = useMemo(() => [
     {
-      emoji: '💬',
-      title: 'Voice Call Chat',
-      description: 'Personal Gossip or Stress Relief',
-      price: '₹500/hour',
+      emoji: '👴',
+      title: 'Elder Care',
+      description: 'Senior assistance & daily support',
+      price: '₹1000/hour',
       gradient: 'from-purple-400 to-purple-600'
     },
     {
-      emoji: '🎥',
-      title: 'Video Call Chat',
-      description: 'Personal Gossip or Stress Relief',
-      price: '₹1000/hour',
+      emoji: '🤝',
+      title: 'Hangingout',
+      description: 'Casual social time together',
+      price: '₹1500/hour',
       gradient: 'from-pink-400 to-pink-600'
     },
     {
-      emoji: '🎬',
-      title: 'Movie Companion',
-      description: 'Watch together, share laughs',
+      emoji: '🎉',
+      title: 'Clubbing',
+      description: 'Nightlife & party assistance',
       price: '₹2000/hour',
       gradient: 'from-indigo-400 to-indigo-600'
     },
     {
-      emoji: '🛍️',
-      title: 'Shopping Buddy',
-      description: 'Groceries, errands, or window shopping',
+      emoji: '🎬',
+      title: 'Movie Partner',
+      description: 'Watch together, share laughs',
       price: '₹2000/hour',
       gradient: 'from-violet-400 to-violet-600'
     },
     {
-      emoji: '🩺',
-      title: 'Medical Support',
-      description: 'Appointment companionship',
+      emoji: '🛍️',
+      title: 'Shopping Buddy',
+      description: 'Groceries, errands, or shopping',
       price: '₹2000/hour',
       gradient: 'from-fuchsia-400 to-fuchsia-600'
+    },
+    {
+      emoji: '🩺',
+      title: 'Medical Support',
+      description: 'Hospital & appointment assistance',
+      price: '₹2000/hour',
+      gradient: 'from-purple-500 to-pink-500'
     },
     {
       emoji: '🏠',
       title: 'Domestic Help',
       description: 'Light support & organizing',
       price: '₹2000/hour',
-      gradient: 'from-purple-500 to-pink-500'
+      gradient: 'from-cyan-400 to-blue-600'
     },
     {
       emoji: '✈️',
       title: 'Travel Partner',
       description: 'Explore and travel together',
-      price: '₹2000/hour',
-      gradient: 'from-cyan-400 to-blue-600'
-    },
-    {
-      emoji: '😊',
-      title: 'Stress Relief',
-      description: 'Soothe anxiety with presence',
       price: '₹2000/hour',
       gradient: 'from-rose-400 to-rose-600'
     }
@@ -262,20 +262,20 @@ const HomePage = () => {
   const features = [
     {
       icon: <Sparkles className="w-8 h-8" />,
-      title: 'Video & Voice Calls',
-      description: 'Flexible sessions matched to your comfort.',
+      title: 'Multiple Services',
+      description: 'From elder care to clubbing - all your needs covered.',
       color: 'text-purple-600'
     },
     {
       icon: <Shield className="w-8 h-8" />,
-      title: 'Clear Boundaries',
-      description: 'Strictly platonic, consent-first interactions.',
+      title: 'Safe & Professional',
+      description: 'Strictly professional, consent-first interactions.',
       color: 'text-pink-600'
     },
     {
       icon: <Star className="w-8 h-8" />,
-      title: 'Safe & Verified',
-      description: 'Profiles with services, rates & reviews.',
+      title: 'Verified Partners',
+      description: 'All KoPartners with verified profiles & reviews.',
       color: 'text-indigo-600'
     },
     {
@@ -377,7 +377,7 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-block mb-4">
             <span className="bg-purple-100 text-purple-700 px-5 py-2 rounded-full text-sm font-semibold animate-pulse">
-              🏆 India's Number 1 Best Trusted Emotional Wellness Platform
+              🏆 India's #1 Social & Lifestyle Support Services Platform
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
@@ -385,10 +385,10 @@ const HomePage = () => {
               KoPartner in India
             </span>
             <br />
-            <span className="text-gray-800">Professional Companionship Therapy</span>
+            <span className="text-gray-800">Professional Social Support Services</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Safe, consent-first, strictly platonic companionship with verified KoPartners across {operationalCities.slice(0, 5).map(c => c.name).join(', ')} and {operationalCities.length - 5}+ more cities.
+            Safe, verified, professional KoPartners across {operationalCities.slice(0, 5).map(c => c.name).join(', ')} and {operationalCities.length - 5}+ more cities. India's trusted social and lifestyle support platform.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
@@ -556,14 +556,14 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-3xl shadow-lg p-8 md:p-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Professional Companionship Service Across India
+              Professional Social Support Service Across India
             </h2>
             <div className="prose prose-lg max-w-none text-gray-700">
               <p className="text-lg leading-relaxed mb-4">
-                Looking for a trusted <strong>emotional wellness service in India</strong>? KoPartner is <strong>India's Number 1 Best Trusted Emotional Wellness Platform</strong> for professional companionship services across all major cities.
+                Looking for trusted <strong>social support service in India</strong>? KoPartner is <strong>India's #1 Social & Lifestyle Support Services Platform</strong> - connecting you with professional support services across all major cities.
               </p>
               <p className="text-lg leading-relaxed mb-4">
-                <strong>Find a KoPartner near me</strong> has never been easier! Our platform connects you with verified, professional companions who provide safe, consent-first, and strictly platonic emotional wellness support. Whether you're searching for <strong>companionship service near me</strong> in Delhi, Mumbai, Bangalore, or any other city, KoPartner ensures quality emotional wellness support.
+                <strong>Find a KoPartner near me</strong> has never been easier! Our platform connects you with verified, professional KoPartners who provide safe, consent-first services. Whether you're searching for <strong>social support service near me</strong> in Delhi, Mumbai, Bangalore, or any other city, KoPartner ensures quality professional support.
               </p>
               
               {/* City Grid for SEO - CLICKABLE */}
@@ -586,7 +586,7 @@ const HomePage = () => {
               </div>
 
               <p className="text-lg leading-relaxed">
-                Our <strong>companionship services</strong> help reduce stress, anxiety, and loneliness through safe emotional support and professional care. All our KoPartners are background-verified, trained professionals committed to maintaining strict boundaries and ensuring your comfort and safety.
+                Our <strong>social support services</strong> help with daily activities through safe professional care. All our KoPartners are background-verified, trained professionals committed to maintaining strict boundaries and ensuring your comfort and safety.
               </p>
             </div>
           </div>
@@ -600,7 +600,7 @@ const HomePage = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               Our Services
             </h2>
-            <p className="text-lg text-gray-600">Choose from our wide range of companionship services</p>
+            <p className="text-lg text-gray-600">Choose from our wide range of professional support services</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
@@ -633,7 +633,7 @@ const HomePage = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               Why Choose Us
             </h2>
-            <p className="text-lg text-gray-600">India's Number 1 Trusted Emotional Wellness Platform</p>
+            <p className="text-lg text-gray-600">India's #1 Trusted Social & Lifestyle Support Platform</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
@@ -726,7 +726,7 @@ const HomePage = () => {
             Earn ₹1 Lakh+ Per Month
           </h2>
           <p className="text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed opacity-95">
-            Join India's Number 1 emotional wellness platform. Set your own rates, choose your services, and earn while helping others.
+            Join India's #1 social support platform. Set your own rates, choose your services, and earn while helping others.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -760,15 +760,15 @@ const HomePage = () => {
             <h3 className="text-2xl font-bold mb-5">How KoPartners Earn:</h3>
             <div className="grid md:grid-cols-2 gap-4 text-left">
               <div className="bg-white/10 p-4 rounded-xl">
-                <p className="font-bold text-lg mb-1">✓ Voice Calls: ₹500/hour</p>
-                <p className="text-green-50 text-sm">10 hours = ₹5,000</p>
-              </div>
-              <div className="bg-white/10 p-4 rounded-xl">
-                <p className="font-bold text-lg mb-1">✓ Video Calls: ₹1,000/hour</p>
+                <p className="font-bold text-lg mb-1">✓ Elder Care: ₹1,000/hour</p>
                 <p className="text-green-50 text-sm">10 hours = ₹10,000</p>
               </div>
               <div className="bg-white/10 p-4 rounded-xl">
-                <p className="font-bold text-lg mb-1">✓ In-Person: ₹2,000/hour</p>
+                <p className="font-bold text-lg mb-1">✓ Hangingout: ₹1,500/hour</p>
+                <p className="text-green-50 text-sm">10 hours = ₹15,000</p>
+              </div>
+              <div className="bg-white/10 p-4 rounded-xl">
+                <p className="font-bold text-lg mb-1">✓ Clubbing & Events: ₹2,000/hour</p>
                 <p className="text-green-50 text-sm">10 hours = ₹20,000</p>
               </div>
               <div className="bg-white/10 p-4 rounded-xl">
@@ -807,16 +807,16 @@ const HomePage = () => {
               </div>
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                  <span className="text-gray-700">Voice Calls</span>
-                  <span className="font-bold text-xl text-purple-600">₹100/hr</span>
+                  <span className="text-gray-700">Elder Care</span>
+                  <span className="font-bold text-xl text-purple-600">₹1000/hr</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                  <span className="text-gray-700">Video Calls</span>
-                  <span className="font-bold text-xl text-purple-600">₹500/hr</span>
+                  <span className="text-gray-700">Hangingout</span>
+                  <span className="font-bold text-xl text-purple-600">₹1500/hr</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                  <span className="text-gray-700">In-person</span>
-                  <span className="font-bold text-xl text-purple-600">₹1000+/hr</span>
+                  <span className="text-gray-700">Clubbing & Events</span>
+                  <span className="font-bold text-xl text-purple-600">₹2000/hr</span>
                 </div>
               </div>
               <button
@@ -951,7 +951,7 @@ const HomePage = () => {
                 <span className="text-purple-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-6 text-gray-600 leading-relaxed">
-                <p><strong>KoPartner is India's Number 1 Best Trusted Emotional Wellness Platform.</strong> It's a professional companionship service that connects people with verified companions (KoPartners) for safe, consent-first, strictly platonic emotional wellness support through voice calls, video calls, and in-person sessions. Our services help reduce stress, anxiety, and loneliness through professional companionship.</p>
+                <p><strong>KoPartner is India's #1 Social & Lifestyle Support Services Platform.</strong> It's a professional social support service that connects people with verified KoPartners for safe, consent-first, professional support services including elder care, hangingout, clubbing, movie partners, shopping buddies, medical support, and more. Our services help you with daily activities through professional care.</p>
               </div>
             </details>
 
@@ -981,15 +981,15 @@ const HomePage = () => {
                 <span className="text-purple-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-6 text-gray-600 leading-relaxed">
-                <p>KoPartner offers multiple professional companionship services:</p>
+                <p>KoPartner offers multiple professional social support services:</p>
                 <ul className="mt-2 space-y-2">
-                  <li><strong>Voice Call Chat (₹500/hour)</strong> - Personal gossip, stress relief, friendly conversation</li>
-                  <li><strong>Video Call Chat (₹1,000/hour)</strong> - Face-to-face virtual companionship</li>
-                  <li><strong>Movie Companion (₹2,000/hour)</strong> - Watch movies together, share experiences</li>
-                  <li><strong>Shopping Buddy (₹2,000/hour)</strong> - Groceries, errands, window shopping</li>
-                  <li><strong>Medical Support (₹2,000/hour)</strong> - Appointment companionship</li>
+                  <li><strong>Elder Care (₹1,000/hour)</strong> - Senior assistance & daily support</li>
+                  <li><strong>Hangingout (₹1,500/hour)</strong> - Casual social time together</li>
+                  <li><strong>Clubbing (₹2,000/hour)</strong> - Nightlife & party assistance</li>
+                  <li><strong>Movie Partner (₹2,000/hour)</strong> - Watch movies together, share experiences</li>
+                  <li><strong>Shopping Buddy (₹2,000/hour)</strong> - Groceries, errands, shopping</li>
+                  <li><strong>Medical Support (₹2,000/hour)</strong> - Hospital & appointment assistance</li>
                   <li><strong>Travel Partner (₹2,000/hour)</strong> - Explore and travel together</li>
-                  <li><strong>Stress Relief (₹2,000/hour)</strong> - Anxiety and stress support</li>
                 </ul>
               </div>
             </details>
@@ -1001,16 +1001,16 @@ const HomePage = () => {
                 <span className="text-purple-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-6 text-gray-600 leading-relaxed">
-                <p><strong>Yes, KoPartner is India's most trusted emotional wellness platform.</strong> We ensure safety through:</p>
+                <p><strong>Yes, KoPartner is India's most trusted social support platform.</strong> We ensure safety through:</p>
                 <ul className="mt-2 space-y-1 list-disc ml-5">
                   <li>All KoPartners are background verified</li>
                   <li>Trained professionals committed to strict boundaries</li>
-                  <li>Consent-first, strictly platonic services only</li>
+                  <li>Consent-first, strictly professional services only</li>
                   <li>Clear code of conduct and guidelines</li>
                   <li>Secure payment processing</li>
                   <li>24/7 customer support</li>
                 </ul>
-                <p className="mt-3">KoPartner is NOT a dating service. All interactions are professional and platonic.</p>
+                <p className="mt-3">KoPartner is NOT a dating service. All interactions are professional.</p>
               </div>
             </details>
 
@@ -1025,9 +1025,9 @@ const HomePage = () => {
                 <div className="mt-3 bg-green-50 p-4 rounded-xl">
                   <p className="font-semibold text-green-800 mb-2">Example Monthly Earnings:</p>
                   <ul className="space-y-1 text-green-700">
-                    <li>• Voice Calls: ₹500/hr × 20 hrs = ₹10,000</li>
-                    <li>• Video Calls: ₹1,000/hr × 20 hrs = ₹20,000</li>
-                    <li>• In-Person: ₹2,000/hr × 30 hrs = ₹60,000</li>
+                    <li>• Elder Care: ₹1,000/hr × 20 hrs = ₹20,000</li>
+                    <li>• Hangingout: ₹1,500/hr × 20 hrs = ₹30,000</li>
+                    <li>• Clubbing/Events: ₹2,000/hr × 20 hrs = ₹40,000</li>
                     <li className="font-bold pt-2 border-t border-green-200">Total: ₹90,000/month (you keep ₹72,000)</li>
                   </ul>
                 </div>
@@ -1105,19 +1105,19 @@ const HomePage = () => {
             {/* FAQ Item 8 */}
             <details className="bg-white rounded-2xl shadow-lg group">
               <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-gray-800 text-lg">
-                <span>What is emotional wellness companionship?</span>
+                <span>What is social support service?</span>
                 <span className="text-purple-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 pb-6 text-gray-600 leading-relaxed">
-                <p><strong>Emotional wellness companionship</strong> is a professional service that provides safe, platonic support to help reduce stress, anxiety, and loneliness. Unlike therapy, it focuses on:</p>
+                <p><strong>Social support service</strong> is a professional service that provides safe assistance for daily activities. Our services focus on:</p>
                 <ul className="mt-2 space-y-1 list-disc ml-5">
-                  <li>Friendly presence and emotional connection</li>
-                  <li>Conversations and shared activities</li>
-                  <li>Companionship for daily activities</li>
+                  <li>Professional assistance for daily activities</li>
+                  <li>Elder care and senior support</li>
+                  <li>Social outings and events</li>
                   <li>Non-judgmental support and listening</li>
-                  <li>Helping combat isolation and loneliness</li>
+                  <li>Helping with various lifestyle needs</li>
                 </ul>
-                <p className="mt-3">KoPartner's verified companions maintain strict professional boundaries while providing genuine emotional support and companionship.</p>
+                <p className="mt-3">KoPartner's verified partners maintain strict professional boundaries while providing genuine support.</p>
               </div>
             </details>
 
@@ -1129,15 +1129,15 @@ const HomePage = () => {
               </summary>
               <div className="px-6 pb-6 text-gray-600 leading-relaxed">
                 <p><strong>No, KoPartner is NOT a dating or matrimonial service.</strong></p>
-                <p className="mt-2">KoPartner is strictly a professional emotional wellness and companionship platform. Key differences:</p>
+                <p className="mt-2">KoPartner is strictly a professional social support platform. Key differences:</p>
                 <ul className="mt-2 space-y-1 list-disc ml-5">
-                  <li>All interactions are platonic and professional</li>
+                  <li>All interactions are professional</li>
                   <li>Services are consent-first with clear boundaries</li>
-                  <li>Focus is on emotional support, not romantic relationships</li>
+                  <li>Focus is on support services, not romantic relationships</li>
                   <li>KoPartners are trained professionals</li>
                   <li>Strict code of conduct enforced</li>
                 </ul>
-                <p className="mt-3">Our mission is to help people with stress relief, companionship, and emotional wellness - not matchmaking.</p>
+                <p className="mt-3">Our mission is to help people with social support - not matchmaking.</p>
               </div>
             </details>
 
@@ -1152,9 +1152,9 @@ const HomePage = () => {
                 <div className="mt-3 bg-purple-50 p-4 rounded-xl">
                   <p className="font-semibold text-purple-800 mb-2">For Clients:</p>
                   <ul className="space-y-1 text-purple-700">
-                    <li>• Voice Calls: Starting ₹500/hour</li>
-                    <li>• Video Calls: Starting ₹1,000/hour</li>
-                    <li>• In-Person Services: Starting ₹2,000/hour</li>
+                    <li>• Elder Care: Starting ₹1,000/hour</li>
+                    <li>• Hangingout: Starting ₹1,500/hour</li>
+                    <li>• Clubbing & Events: Starting ₹2,000/hour</li>
                   </ul>
                 </div>
                 <div className="mt-3 bg-green-50 p-4 rounded-xl">

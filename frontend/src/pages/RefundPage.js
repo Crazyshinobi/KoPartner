@@ -26,7 +26,7 @@ const RefundPage = () => {
               <div>
                 <h3 className="text-lg font-bold mb-2">Cuddlist Cancellations:</h3>
                 <ul className="list-disc list-inside space-y-2 text-gray-700">
-                  <li>If cuddlist cancels, client receives full refund</li>
+                  <li>If KoPartner cancels, client receives full refund</li>
                   <li>Repeated cancellations may result in account suspension</li>
                 </ul>
               </div>
