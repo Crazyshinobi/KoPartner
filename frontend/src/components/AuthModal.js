@@ -76,7 +76,7 @@ const AuthModal = ({ isOpen, onClose, initialRole = 'client' }) => {
               </div>
             </div>
             <h2 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">Welcome to Kopartner</h2>
-            <p className="text-gray-600 text-center mb-8">Your social & lifestyle support platform</p>
+            <p className="text-gray-600 text-center mb-8">Your emotional wellness companion</p>
 
             <form onSubmit={handleSendOTP}>
               <div className="mb-6">

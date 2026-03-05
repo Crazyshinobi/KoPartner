@@ -26,7 +26,7 @@ const RefundPage = () => {
               <div>
                 <h3 className="text-lg font-bold mb-2">Cuddlist Cancellations:</h3>
                 <ul className="list-disc list-inside space-y-2 text-gray-700">
-                  <li>If KoPartner cancels, client receives full refund</li>
+                  <li>If cuddlist cancels, client receives full refund</li>
                   <li>Repeated cancellations may result in account suspension</li>
                 </ul>
               </div>
@@ -34,44 +34,13 @@ const RefundPage = () => {
           </section>
 
           <section className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold mb-4">2. Membership Fee (Non-Refundable)</h2>
-            <p className="text-gray-700 mb-4">KoPartner membership fees are available in 3 plans:</p>
-            
-            <div className="space-y-4 mb-6">
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <h3 className="font-bold text-purple-800">6 Months Plan</h3>
-                <p className="text-gray-700">₹199 + 18% GST = <strong>₹235</strong></p>
-                <ul className="list-disc list-inside text-gray-600 mt-2 text-sm">
-                  <li><strong>Non-Refundable</strong></li>
-                  <li>Not transferable to another person</li>
-                </ul>
-              </div>
-              
-              <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
-                <h3 className="font-bold text-pink-800">1 Year Plan <span className="text-xs bg-pink-500 text-white px-2 py-0.5 rounded-full ml-2">Most Popular</span></h3>
-                <p className="text-gray-700">₹499 + 18% GST = <strong>₹589</strong></p>
-                <ul className="list-disc list-inside text-gray-600 mt-2 text-sm">
-                  <li><strong>Non-Refundable</strong></li>
-                  <li>Not transferable to another person</li>
-                </ul>
-              </div>
-              
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <h3 className="font-bold text-amber-800">Lifetime Plan</h3>
-                <p className="text-gray-700">₹999 + 18% GST = <strong>₹1179</strong></p>
-                <ul className="list-disc list-inside text-gray-600 mt-2 text-sm">
-                  <li><strong>Non-Refundable</strong></li>
-                  <li>Not transferable to another person</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="bg-gray-100 rounded-lg p-4">
-              <p className="text-gray-700 text-sm">
-                <strong>Note:</strong> All membership fees enable you as a KoPartner, allowing you to earn through the platform. 
-                Once purchased, memberships cannot be refunded or transferred under any circumstances.
-              </p>
-            </div>
+            <h2 className="text-2xl font-bold mb-4">2. Membership Fee Refunds</h2>
+            <p className="text-gray-700 mb-4">Annual cuddlist membership fees (₹1000) are:</p>
+            <ul className="list-disc list-inside space-y-2 text-gray-700">
+              <li>Refundable within 7 days if no bookings received</li>
+              <li>Non-refundable after first booking or after 7 days</li>
+              <li>Not transferable to another person</li>
+            </ul>
           </section>
 
           <section className="bg-white rounded-2xl shadow-lg p-8">
