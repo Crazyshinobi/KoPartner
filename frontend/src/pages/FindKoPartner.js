@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import RazorpayPayment from '../components/RazorpayPayment';
+import CashfreePayment from '../components/CashfreePayment';
 import { 
   Search, MapPin, Star, Phone, Mail, Heart, 
   Filter, CreditCard, CheckCircle, Lock, AlertCircle,
@@ -203,7 +203,7 @@ const FindKoPartner = () => {
               </button>
 
               <p className="text-sm text-gray-500 mt-4">
-                Secure payment powered by Razorpay
+                Secure payment powered by Cashfree
               </p>
             </div>
           </div>
@@ -260,7 +260,7 @@ const FindKoPartner = () => {
             </div>
 
             {selectedServices.length > 0 && (
-              <RazorpayPayment
+              <CashfreePayment
                 type="service"
                 services={selectedServices}
                 token={token}

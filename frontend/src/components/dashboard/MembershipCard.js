@@ -114,7 +114,7 @@ const MembershipCard = ({ user, onPayNow, loading = false }) => {
         ))}
 
         <p className="text-xs text-gray-500 text-center mt-4">
-          All prices include 18% GST. Secure payment via Razorpay.
+          All prices include 18% GST. Secure payment via Cashfree.
         </p>
       </div>
     </div>

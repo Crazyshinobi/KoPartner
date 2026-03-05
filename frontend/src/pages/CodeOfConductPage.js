@@ -78,7 +78,7 @@ const CodeOfConductPage = () => {
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-bold mb-3">For Cuddlists:</h3>
+                <h3 className="text-lg font-bold mb-3">For KoPartners:</h3>
                 <ul className="list-disc list-inside space-y-2 text-gray-700">
                   <li>Screen clients through the platform</li>
                   <li>Set clear boundaries before service begins</li>

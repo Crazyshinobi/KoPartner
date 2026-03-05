@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import RazorpayPayment from '../components/RazorpayPayment';
+import CashfreePayment from '../components/CashfreePayment';
 import { 
   CheckCircle, User, MapPin, Briefcase, CreditCard, 
   ArrowRight, Star, Shield, Clock, Camera, Upload, X
@@ -270,7 +270,7 @@ const KoPartnerSetup = () => {
             </div>
 
             {/* PAYMENT SECTION AT TOP */}
-            <RazorpayPayment
+            <CashfreePayment
               type="membership"
               token={token}
               onSuccess={handlePaymentSuccess}

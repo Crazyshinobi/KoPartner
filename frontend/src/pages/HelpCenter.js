@@ -68,7 +68,7 @@ const HelpCenter = () => {
             <h2 className="text-2xl font-bold mb-6">Popular Topics</h2>
             <div className="space-y-4">
               <button onClick={() => navigate('/faq')} className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded-lg transition">
-                <p className="font-semibold">How do I register as a cuddlist?</p>
+                <p className="font-semibold">How do I register as a KoPartner?</p>
               </button>
               <button onClick={() => navigate('/faq')} className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded-lg transition">
                 <p className="font-semibold">How does payment work?</p>
