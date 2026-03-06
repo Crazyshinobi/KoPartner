@@ -126,10 +126,19 @@ const CashfreePayment = ({
         mode: orderData.environment === 'SANDBOX' ? 'sandbox' : 'production'
       });
 
-      // Open Cashfree checkout using SDK
+      // Open Cashfree checkout using SDK with custom theme
       const checkoutOptions = {
         paymentSessionId: orderData.payment_session_id,
-        redirectTarget: '_self'  // Redirect in same tab
+        redirectTarget: '_self',  // Redirect in same tab
+        appearance: {
+          theme: 'light',
+          variables: {
+            colorPrimary: '#7e22ce',  // Purple-700 to match your brand
+            colorBackground: '#ffffff',
+            fontFamily: 'Inter, system-ui, sans-serif',
+            borderRadius: '12px'
+          }
+        }
       };
 
       console.log('[CASHFREE] Opening checkout with options:', checkoutOptions);
