@@ -575,6 +575,23 @@ MEMBERSHIP_PLANS = {
     }
 }
 
+# Service rates configuration - SECURITY: Server-side validation
+# These are the ONLY valid service rates - frontend rates are IGNORED
+SERVICE_RATES = {
+    "Voice Call Chat": 500,
+    "Video Call Chat": 1000,
+    "Movie Companion": 2000,
+    "In-Person Meeting": 1500,
+    "Elder Care": 1000,
+    "Hangingout": 1500,
+    "Clubbing": 2000,
+    "Shopping Buddy": 1200,
+    "Medical Support": 1500,
+    "Domestic Help": 800,
+    "Travel Partner": 2500,
+    "General Consultation": 500
+}
+
 # Booking Status
 class BookingStatus(str, Enum):
     PENDING = "pending"
@@ -3221,6 +3238,25 @@ async def get_membership_plans():
         })
     return {"plans": plans, "promo": "10 Lac+ Family Celebration - Up to 60% OFF!"}
 
+@api_router.get("/payment/service-rates")
+async def get_service_rates():
+    """
+    Get valid service rates - SECURITY ENDPOINT
+    Frontend MUST use these rates for display
+    Backend will validate and override any rates sent from frontend
+    """
+    services = []
+    for service_name, rate in SERVICE_RATES.items():
+        services.append({
+            "name": service_name,
+            "rate": rate,
+            "rate_per_hour": rate
+        })
+    return {
+        "services": services,
+        "note": "These are the only valid rates. Backend validates all payments."
+    }
+
 @api_router.get("/payment/cashfree-config")
 async def get_cashfree_config():
     """Get Cashfree configuration for frontend"""
@@ -3331,9 +3367,17 @@ async def create_membership_order(request_data: dict = None, current_user: dict 
         if not cashfree_order:
             raise HTTPException(status_code=500, detail="Failed to create payment order")
         
+        # Log the full Cashfree response for debugging
+        logging.info(f"[CREATE-ORDER] Cashfree response: {cashfree_order}")
+        
         # Extract payment session ID
         payment_session_id = cashfree_order.get("payment_session_id", "")
         cf_order_id = cashfree_order.get("cf_order_id", "")
+        
+        # Validate that we have a payment session ID
+        if not payment_session_id:
+            logging.error(f"[CREATE-ORDER] Missing payment_session_id in response: {cashfree_order}")
+            raise HTTPException(status_code=500, detail="Payment session ID not received from gateway")
         
         # Store order in database with retry
         order_doc = {
@@ -3358,15 +3402,12 @@ async def create_membership_order(request_data: dict = None, current_user: dict 
         
         elapsed = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
         logging.info(f"[CREATE-ORDER] ✅ Order created for {current_user['phone']} in {elapsed:.1f}ms | Order: {order_id}")
-        
-        # Construct checkout URL for hosted checkout
-        checkout_url = f"https://sandbox.cashfree.com/checkout?sessionId={payment_session_id}" if CASHFREE_ENVIRONMENT == 'SANDBOX' else f"https://payments.cashfree.com/checkout?sessionId={payment_session_id}"
+        logging.info(f"[CREATE-ORDER] Payment session ID: {payment_session_id}")
         
         return {
             "order_id": order_id,
             "cf_order_id": cf_order_id,
             "payment_session_id": payment_session_id,
-            "checkout_url": checkout_url,
             "amount": round(total_amount, 2),
             "base_amount": base_amount,
             "gst_amount": gst_amount,
@@ -3378,7 +3419,8 @@ async def create_membership_order(request_data: dict = None, current_user: dict 
             "plan": plan_type,
             "plan_name": plan["name"],
             "description": f"{plan['description']} (₹{base_amount} + 18% GST)",
-            "environment": CASHFREE_ENVIRONMENT
+            "environment": CASHFREE_ENVIRONMENT,
+            "return_url": return_url
         }
     except HTTPException:
         raise
@@ -3565,6 +3607,7 @@ async def verify_membership_payment(payment_data: dict, current_user: dict = Dep
 async def create_service_order(service_data: dict, current_user: dict = Depends(get_current_user)):
     """
     PRO LEVEL: Create Cashfree order for client service payment
+    SECURITY: Server-side rate validation - frontend rates are IGNORED
     Handles 10,000+ hits/day without failures
     """
     start_time = datetime.now(timezone.utc)
@@ -3583,10 +3626,39 @@ async def create_service_order(service_data: dict, current_user: dict = Depends(
     if not services:
         raise HTTPException(status_code=400, detail="No services selected")
     
-    # Calculate total
-    subtotal = sum(s.get("hours", 1) * s.get("rate", 0) for s in services)
+    # SECURITY FIX: Validate and use server-side rates ONLY
+    validated_services = []
+    for service in services:
+        service_name = service.get("name") or service.get("service")
+        hours = max(0.5, min(24, float(service.get("hours", 1))))  # Min 0.5hr, Max 24hr
+        
+        # Get the CORRECT rate from server-side configuration
+        if service_name not in SERVICE_RATES:
+            logging.warning(f"[CREATE-SERVICE-ORDER] Invalid service: {service_name}")
+            raise HTTPException(status_code=400, detail=f"Invalid service: {service_name}")
+        
+        # Use server-side rate, IGNORE frontend rate
+        correct_rate = SERVICE_RATES[service_name]
+        frontend_rate = service.get("rate", 0)
+        
+        # Log if frontend tried to manipulate the rate
+        if frontend_rate != correct_rate:
+            logging.warning(f"[CREATE-SERVICE-ORDER] ⚠️ Rate manipulation attempt! User: {current_user['phone']}, Service: {service_name}, Frontend rate: {frontend_rate}, Correct rate: {correct_rate}")
+        
+        validated_services.append({
+            "name": service_name,
+            "service": service_name,
+            "rate": correct_rate,  # Use server-side rate
+            "rate_per_hour": correct_rate,
+            "hours": hours
+        })
+    
+    # Calculate total using VALIDATED rates
+    subtotal = sum(s["hours"] * s["rate"] for s in validated_services)
     gst = subtotal * 0.18
     total = subtotal + gst
+    
+    logging.info(f"[CREATE-SERVICE-ORDER] Validated services: {validated_services}, Total: ₹{total}")
     
     try:
         # Generate unique order ID
@@ -3657,15 +3729,23 @@ async def create_service_order(service_data: dict, current_user: dict = Depends(
         if not cashfree_order:
             raise HTTPException(status_code=500, detail="Failed to create payment order")
         
+        # Log the full Cashfree response for debugging
+        logging.info(f"[CREATE-SERVICE-ORDER] Cashfree response: {cashfree_order}")
+        
         payment_session_id = cashfree_order.get("payment_session_id", "")
         cf_order_id = cashfree_order.get("cf_order_id", "")
+        
+        # Validate that we have a payment session ID
+        if not payment_session_id:
+            logging.error(f"[CREATE-SERVICE-ORDER] Missing payment_session_id in response: {cashfree_order}")
+            raise HTTPException(status_code=500, detail="Payment session ID not received from gateway")
         
         order_doc = {
             "order_id": order_id,
             "cf_order_id": cf_order_id,
             "payment_session_id": payment_session_id,
             "user_id": current_user["id"],
-            "services": services,
+            "services": validated_services,  # Use validated services with correct rates
             "subtotal": subtotal,
             "gst": gst,
             "total": total,
@@ -3682,15 +3762,12 @@ async def create_service_order(service_data: dict, current_user: dict = Depends(
         
         elapsed = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
         logging.info(f"[CREATE-SERVICE-ORDER] ✅ Order created for {current_user['phone']} in {elapsed:.1f}ms")
-        
-        # Construct checkout URL
-        checkout_url = f"https://sandbox.cashfree.com/checkout?sessionId={payment_session_id}" if CASHFREE_ENVIRONMENT == 'SANDBOX' else f"https://payments.cashfree.com/checkout?sessionId={payment_session_id}"
+        logging.info(f"[CREATE-SERVICE-ORDER] Payment session ID: {payment_session_id}")
         
         return {
             "order_id": order_id,
             "cf_order_id": cf_order_id,
             "payment_session_id": payment_session_id,
-            "checkout_url": checkout_url,
             "amount": round(total, 2),
             "subtotal": subtotal,
             "gst": gst,
@@ -3700,7 +3777,8 @@ async def create_service_order(service_data: dict, current_user: dict = Depends(
             "user_phone": current_user["phone"],
             "user_email": current_user.get("email", ""),
             "description": "KoPartner Service Payment",
-            "environment": CASHFREE_ENVIRONMENT
+            "environment": CASHFREE_ENVIRONMENT,
+            "return_url": return_url
         }
     except HTTPException:
         raise
@@ -4115,10 +4193,39 @@ async def select_kopartner(selection: KoPartnerSelection, current_user: dict = D
         if any(s.get("kopartner_id") == selection.kopartner_id for s in current_selections):
             raise HTTPException(status_code=400, detail="You have already selected this KoPartner")
         
-        # Calculate service amount and KoPartner earnings (80% of service value)
-        service_amount = sum(s.get("hours", 1) * s.get("rate", 0) for s in selection.selected_services)
+        # SECURITY FIX: Validate service rates server-side
+        validated_services = []
+        for service in selection.selected_services:
+            service_name = service.get("name") or service.get("service")
+            hours = max(0.5, min(24, float(service.get("hours", 1))))
+            
+            # Get the CORRECT rate from server-side configuration
+            if service_name not in SERVICE_RATES:
+                logging.warning(f"[SELECT-KOPARTNER] Invalid service: {service_name}")
+                raise HTTPException(status_code=400, detail=f"Invalid service: {service_name}")
+            
+            # Use server-side rate, IGNORE frontend rate
+            correct_rate = SERVICE_RATES[service_name]
+            frontend_rate = service.get("rate", 0)
+            
+            # Log if frontend tried to manipulate the rate
+            if frontend_rate != correct_rate:
+                logging.warning(f"[SELECT-KOPARTNER] ⚠️ Rate manipulation attempt! User: {current_user['phone']}, Service: {service_name}, Frontend rate: {frontend_rate}, Correct rate: {correct_rate}")
+            
+            validated_services.append({
+                "name": service_name,
+                "service": service_name,
+                "rate": correct_rate,
+                "rate_per_hour": correct_rate,
+                "hours": hours
+            })
+        
+        # Calculate service amount and KoPartner earnings (80% of service value) using VALIDATED rates
+        service_amount = sum(s["hours"] * s["rate"] for s in validated_services)
         kopartner_earning = service_amount * 0.80  # 80% goes to KoPartner
         platform_fee = service_amount * 0.20  # 20% platform fee
+        
+        logging.info(f"[SELECT-KOPARTNER] Validated services: {validated_services}, Amount: ₹{service_amount}")
         
         # Create booking with PENDING status
         booking_id = str(uuid.uuid4())
@@ -4132,7 +4239,7 @@ async def select_kopartner(selection: KoPartnerSelection, current_user: dict = D
             "kopartner_name": kopartner.get("name", "KoPartner"),
             "kopartner_phone": kopartner["phone"],
             "kopartner_email": kopartner.get("email", ""),
-            "selected_services": selection.selected_services,
+            "selected_services": validated_services,  # Use validated services
             "preferred_date": selection.preferred_date,
             "preferred_time": selection.preferred_time,
             "notes": selection.notes,
@@ -7417,6 +7524,11 @@ async def auto_email_job():
 @app.on_event("startup")
 async def startup_event():
     """Initialize database indexes and start scheduler on server startup"""
+    logging.info("[STARTUP] Server starting...")
+    
+    # TEMPORARY: Skip index creation to speed up startup
+    # Uncomment below when database is stable
+    """
     logging.info("[STARTUP] Creating database indexes for SUPER FAST search (10 Lac+ users)...")
     
     # Create indexes for users collection (critical for 10Lac+ users)
@@ -7514,6 +7626,9 @@ async def startup_event():
         logging.info("[STARTUP] ✅ Deleted users indexes created - SOFT DELETE ENABLED")
     except Exception as e:
         logging.warning(f"[STARTUP] Deleted users index creation warning: {e}")
+    """
+    
+    logging.info("[STARTUP] ✅ Startup complete (indexes skipped for fast startup)")
     
     logging.info("[SCHEDULER] Starting automatic email scheduler...")
     

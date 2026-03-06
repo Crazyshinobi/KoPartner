@@ -32,7 +32,6 @@ const CashfreePayment = ({
   const [error, setError] = useState('');
   const [selectedPlan, setSelectedPlan] = useState(initialPlan);
   const [showPlanSelector, setShowPlanSelector] = useState(type === 'membership');
-  const [checkoutUrl, setCheckoutUrl] = useState('');
 
   // Verify payment status when returning from Cashfree checkout
   useEffect(() => {
@@ -91,7 +90,6 @@ const CashfreePayment = ({
   const handlePayment = async () => {
     setLoading(true);
     setError('');
-    setCheckoutUrl('');
 
     try {
       // Create order based on type
@@ -110,21 +108,48 @@ const CashfreePayment = ({
 
       const orderData = orderResponse.data;
       console.log('[CASHFREE] Order created:', orderData.order_id);
+      console.log('[CASHFREE] Payment session ID:', orderData.payment_session_id);
 
-      if (orderData.checkout_url) {
-        setCheckoutUrl(orderData.checkout_url);
-        // Redirect to Cashfree hosted checkout
-        window.location.href = orderData.checkout_url;
-      } else {
-        throw new Error('Checkout URL not received');
+      if (!orderData.payment_session_id) {
+        throw new Error('Payment session ID not received');
       }
+
+      // Load Cashfree SDK if not already loaded
+      if (!window.Cashfree) {
+        throw new Error('Cashfree SDK not loaded. Please refresh the page.');
+      }
+
+      // Initialize Cashfree SDK
+      const cashfree = window.Cashfree({
+        mode: orderData.environment === 'SANDBOX' ? 'sandbox' : 'production'
+      });
+
+      // Open Cashfree checkout using SDK
+      const checkoutOptions = {
+        paymentSessionId: orderData.payment_session_id,
+        redirectTarget: '_self'  // Redirect in same tab
+      };
+
+      console.log('[CASHFREE] Opening checkout with options:', checkoutOptions);
+      
+      cashfree.checkout(checkoutOptions).then((result) => {
+        if (result.error) {
+          console.error('[CASHFREE] Checkout error:', result.error);
+          setError(result.error.message || 'Payment initialization failed');
+          setLoading(false);
+        }
+        if (result.redirect) {
+          console.log('[CASHFREE] Redirecting to payment page...');
+        }
+      }).catch((err) => {
+        console.error('[CASHFREE] Checkout exception:', err);
+        setError('Failed to open payment page');
+        setLoading(false);
+      });
 
     } catch (err) {
       console.error('[CASHFREE] Order creation error:', err);
       setError(err.response?.data?.detail || 'Failed to initiate payment');
-      if (onError) {
-        onError(err);
-      }
       setLoading(false);
     }
   };
