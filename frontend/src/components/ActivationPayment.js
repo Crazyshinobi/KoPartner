@@ -112,6 +112,11 @@ const ActivationPayment = ({ onSuccess }) => {
     setLoading(true);
 
     try {
+      // Check if Cashfree SDK is loaded
+      if (!window.Cashfree) {
+        throw new Error('Cashfree SDK not loaded. Please refresh the page and try again.');
+      }
+
       // Create order with Cashfree
       const orderResponse = await axios.post(
         `${API}/payment/create-membership-order`,
@@ -126,13 +131,40 @@ const ActivationPayment = ({ onSuccess }) => {
       }
 
       console.log('[ACTIVATION] Order created:', orderData.order_id);
+      console.log('[ACTIVATION] Payment session ID:', orderData.payment_session_id);
 
-      // Redirect to Cashfree hosted checkout
-      if (orderData.checkout_url) {
-        window.location.href = orderData.checkout_url;
-      } else {
-        throw new Error('Checkout URL not received');
+      if (!orderData.payment_session_id) {
+        console.error('[ACTIVATION] Missing payment_session_id. Full response:', orderData);
+        throw new Error('Payment session ID not received');
       }
+
+      // Initialize Cashfree SDK
+      const cashfree = window.Cashfree({
+        mode: orderData.environment === 'SANDBOX' ? 'sandbox' : 'production'
+      });
+
+      // Open Cashfree checkout using SDK
+      const checkoutOptions = {
+        paymentSessionId: orderData.payment_session_id,
+        redirectTarget: '_self'  // Redirect in same tab
+      };
+
+      console.log('[ACTIVATION] Opening checkout with options:', checkoutOptions);
+      
+      cashfree.checkout(checkoutOptions).then((result) => {
+        if (result.error) {
+          console.error('[ACTIVATION] Checkout error:', result.error);
+          setError(result.error.message || 'Payment initialization failed');
+          setLoading(false);
+        }
+        if (result.redirect) {
+          console.log('[ACTIVATION] Redirecting to payment page...');
+        }
+      }).catch((err) => {
+        console.error('[ACTIVATION] Checkout exception:', err);
+        setError('Failed to open payment page');
+        setLoading(false);
+      });
 
     } catch (err) {
       console.error('Payment initiation error:', err);

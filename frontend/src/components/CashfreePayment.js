@@ -92,6 +92,11 @@ const CashfreePayment = ({
     setError('');
 
     try {
+      // Check if Cashfree SDK is loaded
+      if (!window.Cashfree) {
+        throw new Error('Cashfree SDK not loaded. Please refresh the page and try again.');
+      }
+
       // Create order based on type
       let orderResponse;
       if (type === 'membership') {
@@ -107,16 +112,13 @@ const CashfreePayment = ({
       }
 
       const orderData = orderResponse.data;
+      console.log('[CASHFREE] Full order response:', orderData);
       console.log('[CASHFREE] Order created:', orderData.order_id);
       console.log('[CASHFREE] Payment session ID:', orderData.payment_session_id);
 
       if (!orderData.payment_session_id) {
+        console.error('[CASHFREE] Missing payment_session_id. Full response:', orderData);
         throw new Error('Payment session ID not received');
-      }
-
-      // Load Cashfree SDK if not already loaded
-      if (!window.Cashfree) {
-        throw new Error('Cashfree SDK not loaded. Please refresh the page.');
       }
 
       // Initialize Cashfree SDK
@@ -149,7 +151,7 @@ const CashfreePayment = ({
 
     } catch (err) {
       console.error('[CASHFREE] Order creation error:', err);
-      setError(err.response?.data?.detail || 'Failed to initiate payment');
+      setError(err.response?.data?.detail || err.message || 'Failed to initiate payment');
       setLoading(false);
     }
   };
