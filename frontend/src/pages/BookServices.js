@@ -11,14 +11,14 @@ const BookServices = () => {
   const navigate = useNavigate();
 
   const availableServices = [
-    { name: 'Voice Call Chat', rate: 500 },
-    { name: 'Video Call Chat', rate: 1000 },
+    { name: 'Elder Care', rate: 1000 },
+    { name: 'Hanging Out', rate: 1500 },
     { name: 'Movie Companion', rate: 2000 },
     { name: 'Shopping Buddy', rate: 2000 },
     { name: 'Medical Support', rate: 2000 },
     { name: 'Domestic Help', rate: 2000 },
     { name: 'Travel Partner', rate: 2000 },
-    { name: 'Stress Relief', rate: 2000 }
+    { name: 'Clubbing', rate: 2000 }
   ];
 
   const [selectedServices, setSelectedServices] = useState([]);
