@@ -31,12 +31,12 @@ const Footer = () => {
       url: 'https://linkedin.com/company/kopartner',
       color: 'hover:text-blue-600'
     },
-    {
-      name: 'YouTube',
-      icon: Youtube,
-      url: 'https://youtube.com/@kopartner',
-      color: 'hover:text-red-500'
-    },
+    // {
+    //   name: 'YouTube',
+    //   icon: Youtube,
+    //   url: 'https://youtube.com/@kopartner',
+    //   color: 'hover:text-red-500'
+    // },
     {
       name: 'WhatsApp',
       icon: MessageCircle,
