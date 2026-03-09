@@ -96,7 +96,7 @@ const Footer = () => {
           <div className="mb-3">
             <Logo size="md" showText={true} onClick={() => navigate('/')} />
           </div>
-          <p>© 2025 KoPartner. All rights reserved.</p>
+          <p>© 2025 KoPartner (A unit of SET INDIA BUSINESS PVT LTD). All rights reserved.</p>
           <p className="mt-1 text-sm">Made with ❤️ in India</p>
         </div>
       </div>
