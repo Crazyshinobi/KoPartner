@@ -4613,7 +4613,7 @@ async def get_admin_stats(admin: dict = Depends(get_admin_user)):
         try:
             results = await asyncio.wait_for(
                 asyncio.gather(
-                    db.users.count_documents({"role": {"$ne": "admin"}}),
+                    db.users.estimated_document_count(),
                     db.users.count_documents({"role": client_roles}),
                     db.users.count_documents({"role": kopartner_roles}),
                     db.users.count_documents({
