@@ -4641,7 +4641,7 @@ async def get_admin_stats(admin: dict = Depends(get_admin_user)):
                     db.transactions.count_documents({}),
                     return_exceptions=True
                 ),
-                timeout=60.0  # 8 second timeout
+                timeout=240.0  # 8 second timeout
             )
         except asyncio.TimeoutError:
             logging.error("[ADMIN-STATS] Queries timed out - returning cached/estimated values")
